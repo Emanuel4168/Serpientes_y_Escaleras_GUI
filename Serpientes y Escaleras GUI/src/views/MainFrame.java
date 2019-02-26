@@ -4,9 +4,9 @@ import javax.swing.*;
 import structures.*;
 import routines.*;
 import java.awt.*;
-import java.awt.Event.*;
+import java.awt.event.*;
 
-public class MainFrame extends JFrame{
+public class MainFrame extends JFrame implements ActionListener{
 	
 	private static final String [] IMAGE_NAMES = {"caballo.jpg","camaleon.jpg","delfin.jpg","elefante.jpg","gato.jpg","leon.jpg",
 			"murcielago.jpg","perro.jpg","pulpo.jpg","serpiente.jpg"};
@@ -22,7 +22,7 @@ public class MainFrame extends JFrame{
 	private MainFrame() {
 		super("Serpientes y Escaleras");
 		lblTotalPlayers = new JLabel("Jugadores: "); 
-		lblCurrentPlayer = new JLabel("Jugadores Actual: ");
+		lblCurrentPlayer = new JLabel("Jugador Actual: ");
 		lblDiceResult = new JLabel("Dado: ");
 		
 		nJugadores = Rutinas.nextInt(2, 10);
@@ -43,7 +43,7 @@ public class MainFrame extends JFrame{
 	
 	private void createLogicalBoard() {
 		for(int i = 1; i <= 100; i++) 
-			logicalBoard.InsertaFin(new Casilla(i,'N',null));
+			logicalBoard.InsertaFin(new Casilla(i,'N',null,"casilla.png"));
 		
 		for(byte i =0; i<5; i++)
 			if(!crearEscalera())
@@ -74,6 +74,8 @@ public class MainFrame extends JFrame{
 		inicio.Info.tipoCasilla = 'S';
 		inicio.Info.nuevaPosicion = fin;
 		fin.Info.tipoCasilla = 'T';
+		inicio.Info.baseImage = "serpienteInicio.jpg";
+		fin.Info.baseImage = "serpienteFin.jpg";
 		return true;
 	}
 
@@ -96,11 +98,13 @@ public class MainFrame extends JFrame{
 		inicio.Info.tipoCasilla = 'E';
 		inicio.Info.nuevaPosicion = fin;
 		fin.Info.tipoCasilla = 'T';
+		inicio.Info.baseImage = "escaleraInicio.jpg";
+		fin.Info.baseImage = "escaleraFin.jpg";
 		return true;
 	}
 
 	private void createHeader() {
-		header = new JPanel();
+		header = new JPanel(new GridLayout(0,3));
 		btnStart = new JButton("Iniciar juego");
 		btnRestart = new JButton("Reiniciar juego");
 		btnNextPlayer = new JButton("Siguiente tiro");
@@ -110,18 +114,41 @@ public class MainFrame extends JFrame{
 		header.add(btnNextPlayer);
 		
 		lblTotalPlayers.setText(lblTotalPlayers.getText()+" "+this.nJugadores); 
-		lblCurrentPlayer.setText(lblCurrentPlayer.getText());;
+		lblCurrentPlayer.setText(lblCurrentPlayer.getText());
 		lblDiceResult.setText(lblDiceResult.getText()+" "+this.dado);
 		
 		header.add(lblTotalPlayers);
 		header.add(lblCurrentPlayer);
 		header.add(lblDiceResult);
 		
-		add(header);
+		add(header,BorderLayout.NORTH);
 	}
 	
 	private void createBoard() {
-		board = new JPanel();
+		board = new JPanel(new GridLayout(10,10));
+		NodoDBL<Casilla> iterator = logicalBoard.getFrente(),iterSnake  = logicalBoard.getFrente(),iterStair,aux;
+		while(iterator != null) {
+			board.add(new JLabel(Rutinas.changeSize(iterator.Info.baseImage, 40, 40)));
+			iterator = iterator.getSig();
+		}
+		add(board,BorderLayout.CENTER);
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		JButton btnOnClick =  (JButton) e.getSource();
+		
+		if(btnOnClick == btnStart) {
+			return;
+		}
+		if(btnOnClick == btnRestart) {
+			return;
+		}
+		if(btnOnClick == btnStart) {
+			return;
+		}
+	}
+		
 	
 }
+	
