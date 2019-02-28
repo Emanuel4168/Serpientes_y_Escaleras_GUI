@@ -1,7 +1,8 @@
 package structures;
 
+import javax.swing.JLabel;
 
-public class Casilla{
+public class Casilla extends JLabel{
 	public int noCasilla;
 	public char tipoCasilla;
 	public NodoDBL<Casilla> nuevaPosicion;
