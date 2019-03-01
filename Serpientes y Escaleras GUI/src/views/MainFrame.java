@@ -151,16 +151,20 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		if(btnOnClick == btnStart) {
 			btnNextPlayer.setEnabled(true);
+			btnStart.setEnabled(false);
 			return;
 		}
 		if(btnOnClick == btnRestart) {
 			logicalBoard = null;
+			jugadores = null;
+			jugadores = new NodoDBL[nJugadores];
 			logicalBoard = new ListaDBL<Casilla>();
 			createLogicalBoard();
 			createBoard();
-			update(getGraphics());
 			btnRestart.setEnabled(false);
 			btnNextPlayer.setEnabled(false);
+			btnStart.setEnabled(true);
+			update(getGraphics());
 			
 			return;
 		}
@@ -186,8 +190,16 @@ public class MainFrame extends JFrame implements ActionListener{
 					avanza = false;
 				jugadores[jugadorActual] = avanza? jugadores[jugadorActual].getSig():jugadores[jugadorActual].getAnt();
 			}
+			
 			jugadores[jugadorActual].Info.setIcon(playerIcon);
-			casillaInicio.setIcon(Rutinas.changeSize(imagenInicio,40,40));
+			jugadores[jugadorActual].Info.players.Inserta(IMAGE_NAMES[jugadorActual]);
+			casillaInicio.players.Retira();
+			if(casillaInicio.players.Vacia())
+				casillaInicio.setIcon(Rutinas.changeSize(casillaInicio.baseImage,40,40));
+			else {
+				casillaInicio.players.Retira();
+				casillaInicio.setIcon(Rutinas.changeSize(casillaInicio.players.Dr,40,40));
+			}
 			
 			imagenInicio = jugadores[jugadorActual].Info.baseImage;
 			casillaInicio = jugadores[jugadorActual].Info;
@@ -197,12 +209,19 @@ public class MainFrame extends JFrame implements ActionListener{
 //			}catch(Exception ex) {}
 			
 			if(jugadores[jugadorActual].Info.tipoCasilla == 'E') {
-				jugadores[jugadorActual] = jugadores[jugadorActual].Info.nuevaPosicion;
 				try {
 					Thread.sleep(1000);
 				}catch(Exception ex) {}
+				jugadores[jugadorActual] = jugadores[jugadorActual].Info.nuevaPosicion;
 				jugadores[jugadorActual].Info.setIcon(playerIcon);
-				casillaInicio.setIcon(Rutinas.changeSize(imagenInicio,40,40));
+				jugadores[jugadorActual].Info.players.Inserta(IMAGE_NAMES[jugadorActual]);
+				casillaInicio.players.Retira();
+				if(casillaInicio.players.Vacia())
+					casillaInicio.setIcon(Rutinas.changeSize(casillaInicio.baseImage,40,40));
+				else {
+					casillaInicio.players.Retira();
+					casillaInicio.setIcon(Rutinas.changeSize(casillaInicio.players.Dr,40,40));
+				}
 			}
 			
 			if(jugadores[jugadorActual].Info.tipoCasilla == 'S') {
@@ -211,7 +230,13 @@ public class MainFrame extends JFrame implements ActionListener{
 					Thread.sleep(1000);
 				}catch(Exception ex) {}
 				jugadores[jugadorActual].Info.setIcon(playerIcon);
-				casillaInicio.setIcon(Rutinas.changeSize(imagenInicio,40,40));
+				casillaInicio.players.Retira();
+				if(casillaInicio.players.Vacia())
+					casillaInicio.setIcon(Rutinas.changeSize(casillaInicio.baseImage,40,40));
+				else {
+					casillaInicio.players.Retira();
+					casillaInicio.setIcon(Rutinas.changeSize(casillaInicio.players.Dr,40,40));
+				}
 			}
 			
 			if(jugadores[jugadorActual].Info.noCasilla == 100) {
@@ -229,6 +254,17 @@ public class MainFrame extends JFrame implements ActionListener{
 		btnNextPlayer.setEnabled(false);
 		btnRestart.setEnabled(true);
 		JOptionPane.showMessageDialog(null,"el ganador es: "+IMAGE_NAMES[ganador].substring(0,IMAGE_NAMES[ganador].length()-4));
+	}
+	
+	private void repintarCasillas(Casilla casillaInicio, int jugadorActual, ImageIcon playerIcon) {
+		jugadores[jugadorActual].Info.setIcon(playerIcon);
+		casillaInicio.players.Retira();
+		if(casillaInicio.players.Vacia())
+			casillaInicio.setIcon(Rutinas.changeSize(casillaInicio.baseImage,40,40));
+		else {
+			casillaInicio.players.Retira();
+			casillaInicio.setIcon(Rutinas.changeSize(casillaInicio.players.Dr,40,40));
+		}
 	}
 		
 	
